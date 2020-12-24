@@ -1,0 +1,51 @@
+// antd
+
+.ant-pro-basicLayout-content {
+  margin: 0px!important;
+}
+
+// table 组件左右滑动 左侧 阴影取消
+.ant-table-ping-left:not(.ant-table-has-fix-left) .ant-table-container::before {
+  box-shadow: none!important;
+}
+
+
+// 页面 顶部 高度设置
+.ant-layout-header, .ant-pro-global-header { // 头部高度
+  height: 68px;
+  border-bottom: 4px solid #F00009;
+  background-color: #001529;
+}
+.ant-pro-global-header-trigger { // trigger
+  height: 46px;
+  line-height: 46px;
+  color: #fff;
+}
+.ant-pro-global-header-trigger:hover {
+  background-color: #f00008c2;
+}
+
+
+.ant-dropdown-trigger { // 头像悬浮 下拉
+  height: 46px;
+  line-height: 46px;
+}
+
+.ant-pro-sider-menu-logo {
+  border-bottom: 4px solid #F00009;
+  :global {
+    .logo-area {
+      position: relative;
+      .anticon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+  }
+}
+
+// reset css
+
+ul,li { padding: 0; margin: 0; list-style: none;}
