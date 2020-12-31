@@ -2,7 +2,11 @@
   "private": true,
   "scripts": {
     "start": "umi dev",
-    "build": "umi build",
+    "dev": "umi build",
+    "daily": "cross-env UMI_ENV=daily umi build",
+    "gray": "cross-env UMI_ENV=gray umi build",
+    "prod": "cross-env UMI_ENV=prod umi build && tar -cvf dist.tar dist",
+    "build": "node ./main",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
