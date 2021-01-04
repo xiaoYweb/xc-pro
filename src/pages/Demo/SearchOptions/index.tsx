@@ -10,7 +10,7 @@ import moment from 'moment';
 import SelfInput from '@/components/SearchOptions/Input';
 import SelfSelect from '@/components/SearchOptions/Select';
 import SpecialRangePicker from '@/components/SearchOptions/SpecialRangePicker';
-
+import UsernameSelect from '@/components/FuzzySearch/UsernameSelect';
 
 const FormItem = Form.Item;
 const FormStyle = {
@@ -37,6 +37,7 @@ const Temp = (props: any) => {
   const {
     dispatch,
     formData,
+    location: { pathname },
   } = props;
 
 
@@ -102,7 +103,11 @@ const Temp = (props: any) => {
                 label: '选择框', name: 'type'
               }} map={testMap} />
             </Col>
-            <Col span={6}></Col>
+            <Col span={6}>
+                <UsernameSelect Wrap={FormItem} wrapProps={{
+                  label: '用户名称', name: 'promoterId'
+                }} pathname={pathname} />
+              </Col>
             <Col span={6}></Col>
             <Col span={12}>
               <SpecialRangePicker Wrap={FormItem} wrapProps={{
