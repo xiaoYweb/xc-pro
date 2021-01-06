@@ -1,4 +1,4 @@
-import React, { useEffect, FC, useState } from 'react';
+import React, { useEffect, FC, useState, forwardRef, useImperativeHandle } from 'react';
 import { Tabs, Button } from 'antd';
 import matchRoute from './matchRoute';
 import styles from './index.less';
@@ -9,10 +9,11 @@ interface propType {
   route: any; // 路由 配合 pathname  找出 当前组件的 pathname
   navTo: any; // 外部传入的 路由跳转 回调方法
   allowBackHome?: boolean; // 没有当前页记录 404 403 是否允许 直接跳转主页(关闭所有标签)
+  ref?: boolean; // 获取当前组件实例 用于 方法暴露
 }
 const { TabPane } = Tabs;
 
-const Navigation: FC<propType> = props => {
+const Navigation = forwardRef((props: propType, ref: any) => {
   const {
     pathname,
     query,
@@ -24,6 +25,10 @@ const Navigation: FC<propType> = props => {
   const [recordPath, setRecordPath] = useState('')
   const [myHistory, setMyHistory] = useState<any>([]);
 
+  // 外界获取当前实例 包装暴露给外界使用的方法
+  useImperativeHandle(ref, () => ({
+    onClosePage
+  }))
 
   // 导航 列表变化 -- 没有访问权限 (403相关页面) 404相关页面 不允许添加
   useEffect(() => {
@@ -146,6 +151,12 @@ const Navigation: FC<propType> = props => {
     setMyHistory([tagInfo.path])
   };
 
+  // 包装暴露给外界使用的 关闭标签的方法 即 const {location: { pathname }} = props
+  const onClosePage =(path: string) => {
+    if (navList.length < 2) return // 若标签栏只剩下1个 则不允许关闭当前标签
+    return onEdit(path, 'remove')
+  }
+
   const btnNode = <Button
     type="primary" onClick={handleCloseAllTags}
     style={{ marginBottom: '-2px' }}
@@ -171,7 +182,7 @@ const Navigation: FC<propType> = props => {
       }
     </Tabs >
   );
-};
+});
 
 export default Navigation;
 

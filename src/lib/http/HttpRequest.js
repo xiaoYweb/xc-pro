@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { baseUrl, timeout } from '../../../config';
+import { baseUrl, timeout, httpHeades } from '../../../config';
 import interceptors from './interceptors';
 
 class HttpRequest {
@@ -19,7 +19,7 @@ class HttpRequest {
         // token: this.token
         // http://wiki.xinc818.com/pages/viewpage.action?pageId=8554302
         // 新增 权限 埋点校验
-        'app-code': 'APOLLO', // APOLLO 
+        ...httpHeades,
         'device-type': isWindows() ? 'WINDOWS' : 'MAC',
       },
       validateStatus: status => {

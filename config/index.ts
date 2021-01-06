@@ -23,6 +23,10 @@ export const targetUrl = 'https://api.daily.xinc818.net/'; // 接口目标 url
 
 export const timeout = 10 * 1000; // 接口请求最大时间
 
+export const httpHeades = { // 后端约定 请求头需要传递  appCode字段 --> 项目名称
+  'app-code': 'APOLLO'
+}
+
 // export const loginUrl = process.slot_login_url; // 跳转 登录  url  (slot_login_url 打包时 动态插入变量申明并赋值)
 export const loginUrl = isDev
   ? 'https://daily.xinc818.net/sso-system/'

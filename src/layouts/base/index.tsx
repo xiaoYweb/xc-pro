@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import BasicLayout, {
   // DefaultFooter 
 } from '@ant-design/pro-layout';
@@ -13,6 +13,7 @@ import Tabs from '@/components/Tabs';
 import styles from './index.less';
 import { needTab, needAuth, isDev } from '../../../config/index';
 import RightContent from '@/components/RightContent';
+import GlobalContext from './GlobalContext';
 
 const antdConfig: ConfigProviderProps = {
   locale: zhCN,
@@ -24,6 +25,8 @@ const Basic = (props: any) => {
   const { children, location, route, history } = props;
   const { query, pathname } = location;
 
+  const tabRef: any = useRef()
+  const globalValue: any = { tabRef }
   const onCollapse = (current: boolean, next: boolean) => {
     // setBol(next)
   }
@@ -33,84 +36,86 @@ const Basic = (props: any) => {
     setBol((bol: boolean) => !bol)
   }
   return (
-    <ConfigProvider {...antdConfig}>
-      <BasicLayout
-        collapsed={bol}
-        onCollapse={onCollapse}
-        collapsedButtonRender={false}
-        // logo='https://s.xinc818.com/files/kdskh6n4uhl1zq.png'
-        logo={() => {
-          return <div className="logo-area">
-            <img
-              src="https://s.xinc818.com/files/kdskh6n4uhl1zq.png"
-              onClick={handleCollapse} style={{ borderRadius: 4 }}
-            />
-          </div>
-        }}
-        menuHeaderRender={(logoDom, titleDom) => (
-          <Link to="/">
-            {logoDom}
-            {titleDom}
-          </Link>
-        )}
-        menuDataRender={menuList => {
-          const authMenuList = filterAuthMenu(menuList);
-          return needAuth ? authMenuList : menuList;
-        }}
-        menuItemRender={(menuItemProps, defaultDom) => {
-          if (
-            menuItemProps.isUrl ||
-            menuItemProps.children ||
-            !menuItemProps.path
-          ) {
-            return defaultDom;
-          }
-          return <Link to={menuItemProps.path}>{defaultDom}</Link>;
-        }}
-        // breadcrumbRender={(routes = []) => routes}
-        itemRender={(route, params, routes, paths) => {
-          const index = routes.indexOf(route);
-          const bol = index !== 0 && index !== routes.length - 1;
-          return bol ? (
-            <Link to={route.path}>{route.breadcrumbName}</Link>
-          ) : (
-              <span>{route.breadcrumbName}</span>
-            );
-        }}
-        // rightContentRender={() => <RightContent />}
-        headerRender={() => {
-          return <section className={styles['header-area']}>
-            <div className="tab-area">
-              {
-                needTab && <Tabs query={query} pathname={pathname} route={route}
-                  navTo={(path: string, query: any) => {
-                    history.push({
-                      pathname: path,
-                      query
-                    });
-                  }} />
-              }
+    <GlobalContext.Provider value={globalValue}>
+      <ConfigProvider {...antdConfig}>
+        <BasicLayout
+          collapsed={bol}
+          onCollapse={onCollapse}
+          collapsedButtonRender={false}
+          // logo='https://s.xinc818.com/files/kdskh6n4uhl1zq.png'
+          logo={() => {
+            return <div className="logo-area">
+              <img
+                src="https://s.xinc818.com/files/kdskh6n4uhl1zq.png"
+                onClick={handleCollapse} style={{ borderRadius: 4 }}
+              />
             </div>
-            <div className='right-area'>
-              <RightContent />
-            </div>
-          </section>
-        }}
-        // footerRender={() => (
-        //   <div>footer</div>
-        // )}
-        {...defaultSetting}
-        {...props}
-      >
+          }}
+          menuHeaderRender={(logoDom, titleDom) => (
+            <Link to="/">
+              {logoDom}
+              {titleDom}
+            </Link>
+          )}
+          menuDataRender={menuList => {
+            const authMenuList = filterAuthMenu(menuList);
+            return needAuth ? authMenuList : menuList;
+          }}
+          menuItemRender={(menuItemProps, defaultDom) => {
+            if (
+              menuItemProps.isUrl ||
+              menuItemProps.children ||
+              !menuItemProps.path
+            ) {
+              return defaultDom;
+            }
+            return <Link to={menuItemProps.path}>{defaultDom}</Link>;
+          }}
+          // breadcrumbRender={(routes = []) => routes}
+          itemRender={(route, params, routes, paths) => {
+            const index = routes.indexOf(route);
+            const bol = index !== 0 && index !== routes.length - 1;
+            return bol ? (
+              <Link to={route.path}>{route.breadcrumbName}</Link>
+            ) : (
+                <span>{route.breadcrumbName}</span>
+              );
+          }}
+          // rightContentRender={() => <RightContent />}
+          headerRender={() => {
+            return <section className={styles['header-area']}>
+              <div className="tab-area">
+                {
+                  needTab && <Tabs query={query} pathname={pathname} route={route}
+                    navTo={(path: string, query: any) => {
+                      history.push({
+                        pathname: path,
+                        query
+                      });
+                    }} ref={tabRef} />
+                }
+              </div>
+              <div className='right-area'>
+                <RightContent />
+              </div>
+            </section>
+          }}
+          // footerRender={() => (
+          //   <div>footer</div>
+          // )}
+          {...defaultSetting}
+          {...props}
+        >
 
-        {/* 内容区域 overflow-y auto */}
-        <main className={styles['main-area']}>
-          <Card className={styles['main-style']}>
-            {children}
-          </Card>
-        </main>
-      </BasicLayout>
-    </ConfigProvider>
+          {/* 内容区域 overflow-y auto */}
+          <main className={styles['main-area']}>
+            <Card className={styles['main-style']}>
+              {children}
+            </Card>
+          </main>
+        </BasicLayout>
+      </ConfigProvider>
+    </GlobalContext.Provider>
   );
 };
 
